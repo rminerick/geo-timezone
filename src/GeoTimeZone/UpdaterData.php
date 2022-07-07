@@ -2,10 +2,10 @@
 
 namespace GeoTimeZone;
 
-use ZipArchive;
 use ErrorException;
-use GuzzleHttp\Client;
 use GeoTimeZone\Quadrant\Indexer;
+use GuzzleHttp\Client;
+use ZipArchive;
 
 
 class UpdaterData
@@ -29,6 +29,11 @@ class UpdaterData
      */
     public function __construct($dataDirectory = null)
     {
+        if (!extension_loaded("geos")) {
+            throw new ErrorException('php-geos extension not installed');
+        }
+
+        ini_set('memory_limit', '8192M'); 
         if ($dataDirectory == null) {
             throw new ErrorException("ERROR: Invalid data directory.");
         }else{
@@ -56,7 +61,8 @@ class UpdaterData
      */
     protected function getZipResponse($url, $destinationPath = "none")
     {
-        exec("wget {$url} --output-document={$destinationPath}");
+        $escapedDestinationPath = escapeshellarg($destinationPath);
+        exec("wget {$url} --output-document={$escapedDestinationPath}");
     }
     
     /**

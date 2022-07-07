@@ -12,7 +12,7 @@ class CalculatorTest extends AbstractUnitTestCase
     
     protected $calculator;
     
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->calculator = new Calculator(__DIR__ . self::DATA_DIRECTORY);
     }
